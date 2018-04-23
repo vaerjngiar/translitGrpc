@@ -13,12 +13,9 @@ import (
 
 func main() {
 
-	grcpConn, err := grpc.Dial(
-		"127.0.0.1:8081",
-		grpc.WithInsecure(),
-	)
+	grcpConn, err := grpc.Dial("127.0.0.1:8081", grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("cant connect to grpc")
+		log.Fatalf("Error connecting to grpc")
 	}
 	defer grcpConn.Close()
 
@@ -41,7 +38,7 @@ func main() {
 			time.Sleep(time.Millisecond)
 		}
 		client.CloseSend()
-		fmt.Println("\tsend done")
+		fmt.Println("\tAll words send")
 	}(wg)
 
 	go func(wg *sync.WaitGroup) {
@@ -49,7 +46,7 @@ func main() {
 		for {
 			outWord, err := client.Recv()
 			if err == io.EOF {
-				fmt.Println("\tstream closed")
+				fmt.Println("\tStream closed")
 				return
 			} else if err != nil {
 				fmt.Println("\terror happed", err)
